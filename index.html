@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gacha do Jeremias</title>
+</head>
+<body>
+    <div id="slot">
+        <span class="number"></span>
+    </div>
+    <div class="item-info" style="display: none;">
+        <h2 class="item-title"></h2>
+        <p class="item-description"></p>
+    </div>
+    <button onclick="spin()">Spin</button>
+    
+    <script>
+        const items = [
+    { name: "Núcleo Corrompido", description: "???", color: "secret" }, // Adicionando item secreto
+    { name: "O Abutre Wurm", description: "Um companheiro leal e faminto, sempre pronto para te ajudar a limpar o campo de batalha... ou pelo menos te livrar de algumas sobras.", color: "mythic" }, // Adicionando item mítico
+    { name: "Tempestade Engarrafada", description: "Libere a fúria da natureza com esta garrafa mágica que contém uma tempestade completa. Resultando em uma chuva absurdamente forte, que pode provocar raios devastadores e um possível dilúvio que afetará o cenário completamente!!", color: "mythic" }, // Adicionando item mítico
+    { name: "Catalizador Exponencial de Raios", description: "Domine a eletricidade com este artefato, canalizando raios e manipulando-os com maestria. (Dano e efeitos a serem definidos pelo Mestre)", color: "mythic" }, // Adicionando item mítico
+    { name: "Marca Mágica de 5 Elementos", description: "Escolha uma Marca Mágica do elemento que deseja, e domine o elemento com esta marca, moldando-o em criações à sua vontade. (Custo de PE e efeitos a serem definidos pelo Mestre)", color: "mythic" }, // Adicionando item mítico
+    { name: "Galinha Explosiva", description: "Uma criatura volátil que, quando provocada pelo inimigo, explode em uma chuva de 10 penas flamejantes que seguem o inimigo até tocá-lo. Cada pena causa 1d5 de dano, e também inflige 1 de dano de fogo por turno até o fim do combate. Quando ela explode, desaparece e só retorna após 5 turnos. Use com cautela!", color: "legendary" }, // Adicionando item lendário
+    { name: "Luvas do Perfeccionista", description: "Domine a arte do perfeccionismo com estas luvas. Se você tirar um 20 em um teste de 1d20 puro, os efeitos da ação que deseja realizar serão triplicados!!", color: "legendary" }, // Adicionando item lendário
+    { name: "Flauta Pan", description: "(Efeito a ser definido pelo Mestre)", color: "epic" }, // Adicionando item épico
+    { name: "Cajado Mágico", description: "(Efeito a ser definido pelo Mestre)", color: "epic" }, // Adicionando item épico
+    { name: "Escudo de Madeira", description: "Uma defesa robusta para os momentos de perigo.", color: "rare" }, // Adicionando item raro
+    { name: "Espada de Madeira", description: "Uma lâmina simples, mas confiável, para combate corpo a corpo.", color: "rare" }, // Adicionando item raro
+    { name: "Pílula Dourada", description: "Uma pílula dourada e reluzente.", color: "uncommon" }, // Adicionando item incomum
+    { name: "Garrafa com Álcool", description: "Um desinfetante ou um combustível improvisado, dependendo da situação.", color: "uncommon" }, // Adicionando item incomum
+    { name: "Saco", description: "Um acessório prático para carregar seus pertences.", color: "uncommon" }, // Adicionando item incomum
+    { name: "Peça de Xadrez", description: "Uma peça simples de Xadrez.", color: "uncommon" }, // Adicionando item incomum
+    { name: "Ventilador", description: "Um sopro de frescor nos dias mais quentes.", color: "uncommon" }, // Adicionando item incomum
+    { name: "Garrafa de Vidro", description: "Um recipiente útil para armazenar líquidos ou outros objetos.", color: "common" }, // Adicionando item comum
+    { name: "Cerveja", description: "Uma bebida refrescante para relaxar após a batalha.", color: "common" }, // Adicionando item comum
+    { name: "Maleta de Tintas", description: "Cores vibrantes para dar vida às suas criações artísticas.", color: "common" }, // Adicionando item comum
+    { name: "Quadro Pintado à Mão", description: "Uma obra de arte única para decorar sua sala de aula.", color: "common" }, // Adicionando item comum
+    { name: "Livro Filosófico", description: "Mergulhe em reflexões profundas.", color: "common" }, // Adicionando item comum
+    { name: "Tapete", description: "Conforto e aconchego para seus pés.", color: "common" }, // Adicionando item comum
+    { name: "Garrafa com Água", description: "Mantenha-se hidratado.", color: "common" }, // Adicionando item comum
+    { name: "Cobertor", description: "Aconchego e proteção contra o frio.", color: "common" }, // Adicionando item comum
+    { name: "Prato", description: "Sirva suas refeições com estilo.", color: "common" }, // Adicionando item comum
+];
+
+function getRandomNumber(min, max, rarity) {
+    // Definindo os multiplicadores de dificuldade para cada categoria de raridade
+    const rarityMultipliers = {
+        "secret": 1,
+        "mythic": 2,
+        "legendary": 3,
+        "epic": 4,
+        "rare": 5,
+        "uncommon": 6,
+        "common": 7
+    };
+
+    // Ajustando a faixa de números com base na raridade e no multiplicador de dificuldade
+    const adjustedMin = min;
+    const adjustedMax = max * rarityMultipliers[rarity];
+
+    // Gerando um número aleatório na faixa ajustada
+    return Math.floor(Math.random() * (adjustedMax - adjustedMin + 1)) + adjustedMin;
+}
+
+function spin() {
+    var slot = document.getElementById('slot').querySelector('.number');
+    var itemInfo = document.querySelector('.item-info');
+    var itemTitle = document.querySelector('.item-title');
+    var itemDescription = document.querySelector('.item-description');
+
+    var randomNumber = getRandomNumber(0, items.length - 1, "common"); // Ajustado para raridade comum como padrão
+    var item = items[randomNumber];
+
+    slot.innerText = randomNumber;
+    slot.className = "number " + item.color; // Adiciona classe de cor com base na raridade
+
+    itemInfo.style.display = "block";
+    itemTitle.innerText = item.name;
+    itemTitle.className = "item-title " + item.color; // Adiciona classe de cor ao título do item
+    itemDescription.innerText = item.description;
+}
+
+    </script>
+</body>
+</html>
